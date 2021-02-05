@@ -438,11 +438,15 @@ chrome.storage.local.get("showTranslateSelectedContextMenu", onGot => {
     updateTranslateSelectedContextMenu()
 })
 
+
+var menuTranslateSelectedTextId;
 function updateTranslateSelectedContextMenu(hideNow = false) {
     if (typeof chrome.contextMenus != 'undefined') {
-        chrome.contextMenus.remove("translate-selected-text")
+        if (typeof menuTranslateSelectedTextId !== 'undefined') {
+            chrome.contextMenus.remove(menuTranslateSelectedTextId);
+        }
         if (showTranslateSelectedContextMenu == "yes" && !hideNow) {
-            chrome.contextMenus.create({
+            menuTranslateSelectedTextId = chrome.contextMenus.create({
                 id: "translate-selected-text",
                 documentUrlPatterns: ["*://*/*"],
                 title: chrome.i18n.getMessage("msgTranslateSelectedText"),
@@ -461,6 +465,7 @@ chrome.storage.local.get("showContextMenu", onGot => {
 })
 
 var translationStatus = "prompt"
+var menuTranslateWebPageId;
 function updateContextMenu(hideNow = false) {
     if (translationStatus != "prompt") {
         var contextMenuTitle = chrome.i18n.getMessage("btnRestore")
@@ -477,9 +482,11 @@ function updateContextMenu(hideNow = false) {
         }
     }
     if (typeof chrome.contextMenus != 'undefined') {
-        chrome.contextMenus.remove("translate-web-page")
+        if (typeof menuTranslateWebPageId !== 'undefined') {
+            chrome.contextMenus.remove(menuTranslateWebPageId);
+        }
         if (showContextMenu == "yes" && !hideNow) {
-            chrome.contextMenus.create({
+            menuTranslateWebPageId = chrome.contextMenus.create({
                 id: "translate-web-page",
                 documentUrlPatterns: ["*://*/*"],
                 title: contextMenuTitle,
